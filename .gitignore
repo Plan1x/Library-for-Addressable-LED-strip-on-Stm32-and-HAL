@@ -1,0 +1,59 @@
+# CubeIDE specific folders and files
+.cproject
+.project
+.settings/
+
+# STM32CubeMX generated files
+*.ioc
+
+# Object files
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.a
+*.lib
+
+# Executables
+*.elf
+*.hex
+*.bin
+
+# Debug files
+*.d
+*.map
+*.ld
+*.lst
+*.crf
+*.bak
+*.log
+
+# Build output folders
+/Debug/
+/Release/
+/build/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.old
+*.orig
+*.save
+
+# JetBrains IDEs
+.idea/
+
+# MacOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+Desktop.ini
