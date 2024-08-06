@@ -44,6 +44,7 @@ extern "C" {
 typedef uint8_t U8;
 typedef uint16_t U16;
 typedef uint32_t U32;
+
 typedef enum
 {
 	PERIOD = 90 - 1,
@@ -52,6 +53,14 @@ typedef enum
 	WAIT_STATE = 50   // in ms
 
 } Led_states;
+
+typedef struct
+{
+	U8 Green;
+	U8 Red;
+	U8 Blue;
+
+}Color;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

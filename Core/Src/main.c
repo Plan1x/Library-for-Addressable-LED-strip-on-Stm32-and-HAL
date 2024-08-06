@@ -19,14 +19,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "dma.h"
-#include "spi.h"
 #include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ws2812b.h"
-#include "LoRa.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,17 +47,16 @@
 
 /* USER CODE BEGIN PV */
 extern Strip WS2812b;
-LoRa sx1278;
-uint16_t test;
-uint8_t buff[1] = {0,};
-uint8_t counter = 0;
+extern 	U8 Blue_pos_start, Green_pos_start, Red_pos_start;
+extern U8 Blue_pos_end, Green_pos_end, Red_pos_end;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
-uint8_t Lora_rx(LoRa lora, U8 *_buff);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -75,8 +73,8 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	ws2812b_init();
 
-	sx1278 = newLoRa();
-   // buff[0] = 0x01;
+
+
 
   /* USER CODE END 1 */
 
@@ -100,34 +98,20 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_TIM1_Init();
-  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
   WS2812b.htim1 = htim1;
 
-  sx1278.CS_port         = NSS_GPIO_Port;
-   sx1278.CS_pin          = NSS_Pin;
-   sx1278.reset_port      = RST_GPIO_Port;
-   sx1278.reset_pin       = RST_Pin;
-   sx1278.DIO0_port       = DIO0_GPIO_Port;
-   sx1278.DIO0_pin        = DIO0_Pin;
-   sx1278.hSPIx           = &hspi1;
 
-   test = LoRa_init(&sx1278);
+
+
+
+  ws2812b_show();
 
 
 
 
 
-  ws2812b_light_on();
-  //HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (U32 *)WS2812b.buffer, LEDS_COUNT);
-  HAL_Delay(50);
-  ws2812b_light_off();//HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
-
-  HAL_Delay(500);
-
-
-	ws2812b_setstrip(127, 0, 0);
 
   /* USER CODE END 2 */
 
@@ -135,31 +119,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while(1)
 	{
-		 for(U8 i = 0; i < 56; i++)
-				{
 
-			 	 		 ws2812b_setpixel(166,0,0, i);
-			 	 		 ws2812b_setpixel(0,125,0, i + 1);
-			 	 		 ws2812b_setpixel(0,0,125, i + 2);
-			 	 		ws2812b_setpixel(100,0,125, i + 3);
-			 	 		ws2812b_setpixel(0,100,125, i + 4);
+		ws2812b_moving_effect();
 
 
-					 ws2812b_light_on();
-					 HAL_Delay(50);
-					ws2812b_light_off();
-					ws2812b_setstrip(127, 0, 0);
-					 //HAL_Delay(1);
-					 //ws2812b_init();
 
-		//			 ws2812b_light_on();
-		//			   //HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (U32 *)WS2812b.buffer, LEDS_COUNT);
-		//			   HAL_Delay(50);
-		//			   ws2812b_light_off();//HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
 
-						// HAL_Delay(50);
-
-				}
 
 
 
@@ -192,19 +157,6 @@ int main(void)
 //		    HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
 //		}
 
-////ws2812b_fading(BLUE);
-//		ws2812b_setstrip(127,0,0);
-//		HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (U32 *)WS2812b.buffer, LEDS_COUNT);
-//		HAL_Delay(2000);
-//		HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
-//		ws2812b_setstrip(0,127,0);
-//		HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (U32 *)WS2812b.buffer, LEDS_COUNT);
-//	    HAL_Delay(2000);
-//		HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
-//		ws2812b_setstrip(0,0,127);
-//		HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (U32 *)WS2812b.buffer, LEDS_COUNT);
-//		HAL_Delay(2000);
-//		HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
 
 
 
@@ -255,7 +207,8 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-uint8_t Lora_rx(LoRa lora, U8 *_buff)
+
+/*uint8_t Lora_rx(LoRa lora, U8 *_buff)
 {
 	uint8_t val;
 	LoRa_startReceiving(&lora);
@@ -263,7 +216,7 @@ uint8_t Lora_rx(LoRa lora, U8 *_buff)
 	HAL_Delay(50);
 	LoRa_gotoMode(&lora, STNBY_MODE);
 	return val;
-}
+}*/
 
 /* USER CODE END 4 */
 
