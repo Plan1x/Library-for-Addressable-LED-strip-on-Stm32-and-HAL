@@ -16,13 +16,13 @@ static void set_bit(U16 *buffer, uint8_t Byte);
 static void ws2812b_light_on(void); // starts DMA
 static void ws2812b_light_off(void); // stops DMA
 
-void ws2812b_show(void) {
+void ws2812b_show(U8 Delay) {
 
 	HAL_TIM_PWM_Start_DMA(&WS2812b.htim1, TIM_CHANNEL_1, (U32*) WS2812b.buffer,
 	LEDS_COUNT);
-	HAL_Delay(40);
+	HAL_Delay(Delay);
 	HAL_TIM_PWM_Stop_DMA(&WS2812b.htim1, TIM_CHANNEL_1);
-	HAL_Delay(8);
+	HAL_Delay(1);
 }
 static void ws2812b_light_on(void) {
 	HAL_TIM_PWM_Start_DMA(&WS2812b.htim1, TIM_CHANNEL_1, (U32*) WS2812b.buffer,
@@ -66,29 +66,9 @@ void ws2812b_setstrip(uint8_t Green, uint8_t Red, uint8_t Blue) {
 
 	}
 }
-//TODO Fading effect
-void ws2812b_fading(uint8_t Color) {
-	for (U8 i = 0; i < 255; i += 15) {
 
-		ws2812b_setstrip(0, 0, i);
-		HAL_TIM_PWM_Start_DMA(&WS2812b.htim1, TIM_CHANNEL_1,
-				(U32*) WS2812b.buffer, LEDS_COUNT);
-		HAL_Delay(500);
-		HAL_TIM_PWM_Stop_DMA(&WS2812b.htim1, TIM_CHANNEL_1);
-	}
-
-	for (U8 j = 255; j > 0; j -= 15) {
-
-		ws2812b_setstrip(0, 0, j);
-		HAL_TIM_PWM_Start_DMA(&WS2812b.htim1, TIM_CHANNEL_1,
-				(U32*) WS2812b.buffer, LEDS_COUNT);
-		HAL_Delay(500);
-		HAL_TIM_PWM_Stop_DMA(&WS2812b.htim1, TIM_CHANNEL_1);
-	}
-
-}
-
-void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue) {
+void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue,U8 Delay)
+{
 
 
 	U8 counter;
@@ -138,7 +118,7 @@ void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue) {
 
 				if(Blue_pos_end >= 0 && Blue_pos_end < 40 && Blue_pos_start > 80 && Blue_pos_start <= 120) // Blue end begin transfer
 				{
-					if(i >= Blue_pos_end && i < Red_pos_start)//B
+					if(i >= 0 && i < Red_pos_start)//B
 					{
 						ws2812b_setpixel(0, 0, Blue, i);
 					}else if(i >= Red_pos_start && i < Red_pos_end)//R
@@ -158,7 +138,7 @@ void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue) {
 				{
 
 
-					if(i >= Blue_pos_start && i < Blue_pos_end) //B
+					if(i >= 0 && i < Blue_pos_end) //B
 					{
 
 						ws2812b_setpixel(0, 0, Blue, i);
@@ -167,7 +147,7 @@ void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue) {
 					{
 						ws2812b_setpixel(0, Red, 0, i);
 
-					}else if(i >= Green_pos_start && i < Green_pos_end)// G
+					}else if(i >= Green_pos_start && i < PIXELS_COUNT)// G
 					{
 						ws2812b_setpixel(Green, 0, 0, i);
 					}
@@ -202,7 +182,7 @@ void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue) {
 					}
 
 				}
-				else if(Red_pos_end >= 0 && Red_pos_end <= 40 && Red_pos_start <= 120)// Transfering Red end to begin
+				else if(Red_pos_end >= 0 && Red_pos_end <= 40 && Red_pos_start <= 120)// Transfering Red end and Red start to begin
 				{
 					if(i >= 0 && i < Red_pos_end) // R
 					{
@@ -224,17 +204,17 @@ void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue) {
 		}
 
 
-		///////////////Если какой то из курсоров превысил количество пикселей, то возвращаем в начало
+		/////////////// If any of the cursors exceeded the number of pixels, then return to the beginning
 		Red_pos_end = ((Red_pos_end + 1) > 120) ? 0 : (Red_pos_end + 1);
 		Red_pos_start = ((Red_pos_start + 1) > 120) ? 0 : (Red_pos_start + 1);
 		Green_pos_start = ((Green_pos_start + 1) > 120) ? 0 : (Green_pos_start + 1);
 		Green_pos_end = ((Green_pos_end + 1) > 120) ? 0 : (Green_pos_end + 1);
 		Blue_pos_start = ((Blue_pos_start + 1) > 120) ? 0 : (Blue_pos_start + 1);
 		Blue_pos_end = ((Blue_pos_end + 1) > 120) ? 0 : (Blue_pos_end + 1);
-		///////////////Если какой то из курсоров превысил количество пикселей, то возвращаем в начало
+		///////////////If any of the cursors exceeded the number of pixels, then return to the beginning
 
 
-		ws2812b_show();
+		ws2812b_show(Delay);
 		counter = 1;
 
 
@@ -242,21 +222,21 @@ void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue) {
 	}
 }
 
-void ws2812b_sliding_effect(void) {
+void ws2812b_sliding_effect(U8 Red, U8 Green, U8 Blue, U8 Delay) {
 
 	for (U8 i = 0; i < 3; i++) {
 
 		for (U8 k = 0; k < PIXELS_COUNT; k++) {
 
 			if (i == 0) {
-				ws2812b_setpixel(0, 0, 127, k);
+				ws2812b_setpixel(0, 0, Blue, k);
 			} else if (i == 1) {
-				ws2812b_setpixel(0, 127, 0, k);
+				ws2812b_setpixel(0, Red, 0, k);
 			} else if (i == 2) {
-				ws2812b_setpixel(127, 0, 0, k);
+				ws2812b_setpixel(Green, 0, 0, k);
 			}
 
-			ws2812b_show();
+			ws2812b_show(Delay);
 
 		}
 	}

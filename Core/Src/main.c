@@ -105,7 +105,7 @@ int main(void)
 
 
 
-  ws2812b_show();
+  ws2812b_show(20);
 
 
 
@@ -119,43 +119,9 @@ int main(void)
 	while(1)
 	{
 
-		ws2812b_moving_effect_three_colors(210,190,127);
+		ws2812b_moving_effect_three_colors(255,186,126,40);
 
-
-
-
-
-
-
-
-
-
-//		Lora_rx(sx1278, buff);
-//		if(buff[0] == 0x01)
-//		{
-//			buff[0] = 0;
-//			ws2812b_setstrip(127,0,0);
-//			HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (U32 *)WS2812b.buffer, LEDS_COUNT);
-//			HAL_Delay(100);
-//			HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
-//
-//		}else if(buff[0] == 0x02)
-//		{
-//			buff[0] = 0;
-//			ws2812b_setstrip(0,127,0);
-//			HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (U32 *)WS2812b.buffer, LEDS_COUNT);
-//			HAL_Delay(100);
-//			HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
-//
-//		}else if(buff[0] == 0x03)
-//		{
-//			buff[0] = 0;
-//			ws2812b_setstrip(0,0,127);
-//			HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (U32 *)WS2812b.buffer, LEDS_COUNT);
-//			HAL_Delay(100);
-//		    HAL_TIM_PWM_Stop_DMA(&htim1, TIM_CHANNEL_1);
-//		}
-
+		//ws2812b_sliding_effect(255,185,158, 20);
 
 
 
