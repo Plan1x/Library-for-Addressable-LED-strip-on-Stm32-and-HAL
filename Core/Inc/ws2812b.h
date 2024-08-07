@@ -40,7 +40,7 @@ void ws2812b_init(void); // Init`s the led strip(filling pwm dma buffer with log
 void ws2812b_setpixel(uint8_t Green, uint8_t Red,  uint8_t Blue, uint8_t Pixelnum); //Lights specified pixel
 void ws2812b_setstrip(uint8_t Green, uint8_t Red,   uint8_t Blue); // Lights the whole strip
 void ws2812b_fading(uint8_t Color); //TODO
-void ws2812b_moving_effect(void);
+void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue);
 void ws2812b_sliding_effect(void);
 void ws2812b_show(void);
 #endif /* INC_WS2812B_H_ */

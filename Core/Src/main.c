@@ -47,8 +47,7 @@
 
 /* USER CODE BEGIN PV */
 extern Strip WS2812b;
-extern 	U8 Blue_pos_start, Green_pos_start, Red_pos_start;
-extern U8 Blue_pos_end, Green_pos_end, Red_pos_end;
+
 
 /* USER CODE END PV */
 
@@ -120,7 +119,7 @@ int main(void)
 	while(1)
 	{
 
-		ws2812b_moving_effect();
+		ws2812b_moving_effect_three_colors(210,190,127);
 
 
 
