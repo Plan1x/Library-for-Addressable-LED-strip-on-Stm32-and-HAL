@@ -41,9 +41,10 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-typedef uint8_t U8;
-typedef uint16_t U16;
-typedef uint32_t U32;
+
+//typedef uint8_t U8;
+//typedef uint16_t U16;
+//typedef uint32_t U32;
 
 typedef enum
 {
@@ -54,13 +55,15 @@ typedef enum
 
 } Led_states;
 
-typedef struct
-{
-	U8 Green;
-	U8 Red;
-	U8 Blue;
+//typedef struct
+//{
+//	U8 Green;
+//	U8 Red;
+//	U8 Blue;
+//
+//}Color;
 
-}Color;
+
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

@@ -46,7 +46,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern Strip WS2812b;
+
+
 
 
 /* USER CODE END PV */
@@ -54,8 +55,7 @@ extern Strip WS2812b;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
-
+void DWT_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -70,10 +70,10 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
+
+
 	ws2812b_init();
-
-
-
 
   /* USER CODE END 1 */
 
@@ -99,29 +99,23 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  WS2812b.htim1 = htim1;
-
-
-
-
-
-  ws2812b_show(20);
-
-
-
-
-
-
+  ws2812b_new_strip(&htim1);
+  DWT_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	while(1)
+	while (1)
 	{
 
-		ws2812b_moving_effect_three_colors(255,186,126,40);
 
-		//ws2812b_sliding_effect(255,185,158, 20);
+
+
+		ws2812b_moving_effect_three_colors(120,127,127,50);
+
+
+
+		//ws2812b_moving_and_vanishing_effect(127, 127, RED, GREEN, 20);
 
 
 
@@ -173,15 +167,20 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-/*uint8_t Lora_rx(LoRa lora, U8 *_buff)
+void DWT_Init(void)
 {
-	uint8_t val;
-	LoRa_startReceiving(&lora);
-	val = LoRa_receive(&lora, _buff, 1);
-	HAL_Delay(50);
-	LoRa_gotoMode(&lora, STNBY_MODE);
-	return val;
-}*/
+    SCB_DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT_CONTROL |= DWT_CTRL_CYCCNTENA_Msk;
+}
+/*uint8_t Lora_rx(LoRa lora, U8 *_buff)
+ {
+ uint8_t val;
+ LoRa_startReceiving(&lora);
+ val = LoRa_receive(&lora, _buff, 1);
+ HAL_Delay(50);
+ LoRa_gotoMode(&lora, STNBY_MODE);
+ return val;
+ }*/
 
 /* USER CODE END 4 */
 
@@ -192,10 +191,10 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-			/* User can add his own implementation to report the HAL error return state */
-			__disable_irq();
-			while (1) {
-			}
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1) {
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 
