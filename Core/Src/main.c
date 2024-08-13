@@ -47,15 +47,14 @@
 
 /* USER CODE BEGIN PV */
 
-
-
-
+WS2812 Stripe;
+Color test_1, test_2, test_3;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void DWT_Init(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -71,9 +70,21 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+	test_1.Red = 127;
+	test_1.Green = 0;
+	test_1.Blue = 0;
 
+	test_2.Green = 0;
+	test_2.Blue = 127;
+	test_2.Red = 0;
 
-	ws2812b_init();
+	test_3.Green = 127;
+	test_3.Blue = 0;
+	test_3.Red = 0;
+
+	Stripe = new_Strip(&Stripe);
+
+	//ws2812b_init();
 
   /* USER CODE END 1 */
 
@@ -99,8 +110,9 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  ws2812b_new_strip(&htim1);
-  DWT_Init();
+  //ws2812b_new_strip(&htim1);
+  //DWT_Init();
+  Stripe.init(&htim1, TIM1, HAL_TIM_PeriodElapsedCallback);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,9 +121,9 @@ int main(void)
 	{
 
 
-
-
-		ws2812b_moving_effect_three_colors(120,127,127,50);
+		//Stripe.moving_effect_two_colors(&test_1, &test_2, 100);
+		Stripe.moving_effect_three_colors(&test_1, &test_2, &test_3, 20);
+		//ws2812b_moving_effect_three_colors(&Red,&Green,&Blue,30);
 
 
 
@@ -167,11 +179,11 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-void DWT_Init(void)
-{
-    SCB_DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    DWT_CONTROL |= DWT_CTRL_CYCCNTENA_Msk;
-}
+//void DWT_Init(void)
+//{
+//    SCB_DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+//    DWT_CONTROL |= DWT_CTRL_CYCCNTENA_Msk;
+//}
 /*uint8_t Lora_rx(LoRa lora, U8 *_buff)
  {
  uint8_t val;
