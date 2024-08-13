@@ -137,7 +137,7 @@ WS2812 new_Strip(WS2812 * _Strip) // Constructor
  */
 
 
-void ws2812b_setpixel(U8 Red, U8 Green,  U8 Blue, U8 Pixelnum) // GRB Row
+void ws2812b_setpixel(U8 Red, U8 Green,  U8 Blue, U16 Pixelnum) // GRB Row
 {
 	set_bit(((WS2812b.buffer + TIME_TO_RST) + (Pixelnum * BITS_IN_PIXEL)), Green);
 	set_bit(((WS2812b.buffer + TIME_TO_RST) + ((Pixelnum * BITS_IN_PIXEL) + BYTE)), Red);

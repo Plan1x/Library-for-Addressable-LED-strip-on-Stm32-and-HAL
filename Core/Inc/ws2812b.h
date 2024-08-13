@@ -83,9 +83,6 @@ typedef uint32_t U32;
 
 
 
-
-
-
 #define PIXELS_COUNT 120 // Changeable parameter(number of pixels in your led strip)
 
 #define BITS_IN_PIXEL 24
@@ -147,8 +144,8 @@ typedef struct
 
 typedef struct
 {
-	void (*init)(TIM_HandleTypeDef *, TIM_TypeDef *);
-	void (*set_pixel)(U8,U8,U8,U8);
+	void (*init)(TIM_HandleTypeDef *  htim, TIM_TypeDef * TIM);
+	void (*set_pixel)(U8 Red, U8 Green, U8 Blue, U16 Pixelnum);
 	void (*setstrip)(Color *_Col);
 	void (*show)(U16 Delay);
 	void (*moving_effect_two_colors)(Color *_Col_1, Color * _Col_2,  U16 Delay);
@@ -172,17 +169,17 @@ typedef struct
 
 
 /*
- * Description : Initializes the led strip by filling it with Black color
+ * Description : Initializes the Strip struct fields
  *
- * Prototype : void ws2812b_init(void);
+ * Prototype void ws2812b_init(TIM_HandleTypeDef *  htim, TIM_TypeDef * TIM;
  *
+ * Parameters :
  *
- *
- *
+ * TIM_HandleTypeDef *  htim - pointer on object of TIM_HandleTypeDef struct
+ * TIM_TypeDef * TIM - pointer on object of TIM_TypeDef struct
  */
 
-
-//void ws2812b_init(void);
+void ws2812b_init(TIM_HandleTypeDef *  htim, TIM_TypeDef * TIM);
 
 /*
  * Description : Lights up specified pixel with specified color
@@ -203,20 +200,9 @@ typedef struct
  * !! Last pixel index is Pixelnum = (PIXELS_COUNT - 1) !!
  */
 
-void ws2812b_setpixel(U8 Red, U8 Green, U8 Blue, U8 Pixelnum);
+void ws2812b_setpixel(U8 Red, U8 Green, U8 Blue, U16 Pixelnum);
 
-/*
- * Description : Initializes the Strip struct fields(constructor)
- *
- * Prototype ws2812b_new_strip(TIM_HandleTypeDef *  htim);
- *
- * Parameters :
- *
- * TIM_HandleTypeDef *  htim - pointer on object of TIM_HandleTypeDef struct
- *
- */
 
-void ws2812b_init(TIM_HandleTypeDef *  htim, TIM_TypeDef *);
 
  /*
   * Description : Lights up the whole strip with specified color
@@ -225,22 +211,26 @@ void ws2812b_init(TIM_HandleTypeDef *  htim, TIM_TypeDef *);
   *
   * Parameters :
   *
+  *	Color *_Col - pointer on object of Color struct which contains three fields :
+  *
+  *	U8 Red - Sets the brightness of Red color in the whole stripe from 0 to 255
+  *
   * U8 Green - Sets the brightness of Green color in the whole stripe from 0 to 255
   *
-  * U8 Red - Sets the brightness of Red color in the whole stripe from 0 to 255
-  *
   * U8 Blue - Sets the brightness of Blue color in the whole stripe from 0 to 255
+  *
   */
 void ws2812b_setstrip(Color *_Col);
 
 /*
  * Description : Sends the specified effect to strip
  *
- * Prototype : void ws2812b_show(U8 Delay);
+ * Prototype : void ws2812b_show(U16 Delay);
  *
  * Parameters :
  *
- * U8 Delay - transferring data speed
+ * U16 Delay - Led animations delay
+ *
  */
 
 void ws2812b_show(U16 Delay);
@@ -254,18 +244,16 @@ void ws2812b_show(U16 Delay);
 
 /* Description : Dynamic effect #1
  *
- * Prototype : void ws2812b_moving_effect_two_colors(U8 Color_1, U8 Color_2, Colors * Color_palette, U16 Delay);
+ * Prototype : void ws2812b_moving_effect_two_colors(Color *_Col_1, Color * _Col_2,  U16 Delay);
  *
  *
  * Parameters :
  *
- * U8 Color_1 - Sets specified color #1 brightness from 0 to 255
+ * Color *_Col_1 - pointer on object of Color struct
  *
- * U8 Color_2 - Sets specified color #2 brightness from 0 to 255
+ * Color *_Col_2 - pointer on object of Color struct
  *
- * Colors * Color_palette - Pointer to Colors array
- *
- * U8 Delay - Sets the moving speed(recommended minimum is 10)
+ * U16 Delay - Sets the moving speed(recommended minimum is 10)
  *
  */
 
@@ -274,17 +262,15 @@ void ws2812b_moving_effect_two_colors(Color *_Col_1, Color * _Col_2,  U16 Delay)
 /*
  * Description : Dynamic effect #2
  *
- * Prototype : void ws2812b_moving_effect_three_colors(U8 Red, U8 Green, U8 Blue, U16 Delay);
+ * Prototype : void ws2812b_moving_effect_three_colors(Color *_Col_1, Color * _Col_2, Color * _Col_3, U16 Delay);
  *
  * Parameters :
  *
- * U8 Red - Sets the brightness of Red color from 0 to 255
+ * Color *_Col_1 - pointer on object of Color struct
  *
- * U8 Green - Sets the brightness of Green color from 0 to 255
+ * Color *_Col_2 - pointer on object of Color struct
  *
- * U8 Blue - Sets the brightness of Blue color from 0 to 255
- *
- * U8 Delay - Sets the moving speed(recommended minimum is 10)
+ * U16 Delay - Sets the moving speed(recommended minimum is 10)
  *
  */
 
@@ -292,17 +278,17 @@ void ws2812b_moving_effect_three_colors(Color *_Col_1, Color * _Col_2, Color * _
 
 /* Description : Dynamic effect #3
  *
- * Prototype : void ws2812b_sliding_effect(U8 Red, U8 Green, U8 Blue, U16 Delay);
+ * Prototype : void ws2812b_sliding_effect(Color *_Col_1, Color * _Col_2, Color * _Col_3, U16 Delay);
  *
  * Parameters :
  *
- * U8 Red - Sets the brightness of Red color from 0 to 255
+ * Color *_Col_1 - pointer on object of Color struct
  *
- * U8 Green - Sets the brightness of Green color from 0 to 255
+ * Color *_Col_2 - pointer on object of Color struct
  *
- * U8 Blue - Sets the brightness of Blue color from 0 to 255
+ * Color *_Col_3 - pointer on object of Color struct
  *
- * U8 Delay - Sets the moving speed(recommended minimum is 10)
+ * U16 Delay - Sets the moving speed(recommended minimum is 10)
  *
  */
 
@@ -312,17 +298,15 @@ void ws2812b_sliding_effect(Color *_Col_1, Color * _Col_2, Color * _Col_3, U16 D
 
 /* Description : Dynamic effect #4
  *
- * Prototype : ws2812b_moving_and_vanishing_effect(U8 Color_1, U8 Color_2, Colors * Color_palette, U16 Delay);
+ * Prototype : void ws2812b_moving_and_vanishing_effect(Color *_Col_1, Color * _Col_2, U16 Delay);
  *
  * Parameters :
  *
- * U8 Color_1_brightness - Sets specified color #1 brightness from 0 to 255
+ * Color *_Col_1 - pointer on object of Color struct
  *
- * U8 Color_2_brightness - Sets specified color #2 brightness from 0 to 255
+ * Color *_Col_2 - pointer on object of Color struct
  *
- * Colors * Color_palette - Pointer to Colors array
- *
- * U8 Delay - Sets the moving speed(recommended minimum is 10)
+ * U16 Delay - Sets the moving speed(recommended minimum is 10)
  *
  */
 
