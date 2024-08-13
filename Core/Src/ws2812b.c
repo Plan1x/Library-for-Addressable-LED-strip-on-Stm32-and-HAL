@@ -13,10 +13,11 @@ Strip WS2812b; // operational struct
 /*
  * STATIC FUNCTIONS
  */
-static void delay_micros(uint32_t us);
+
+
 static void DWT_Init(void);
-static void init(void);
-static void set_bit(U16 *buffer, uint8_t Byte);
+static void init(void); // inits the main parameters in strip
+static void set_bit(U16 *buffer, uint8_t Byte); // Sets selected 8 bits in buffer
 static void ws2812b_light_on(void); // starts DMA
 static void ws2812b_light_off(void); // stops DMA
 
@@ -37,12 +38,7 @@ static void DWT_Init(void)
 	  DWT_CONTROL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 
-static void delay_micros(U32 us)
-{
-    U32 us_count_tic =  us * (SystemCoreClock / 1000000);
-    DWT -> CYCCNT = 0U;
-    while(DWT -> CYCCNT < us_count_tic);
-}
+
 
 static void init(void) // Filling whole strip with PWM Logic zero`s signal
 {
@@ -75,35 +71,70 @@ static void set_bit(U16 *buffer, uint8_t Byte)
 		Byte >>= 0x01;
 	}
 }
+
+
 /*
  * STATIC FUNCTIONS
  */
 
-void ws2812b_show(U16 Delay)
+
+/*
+ * Operational functions
+ */
+
+void ws2812b_delay_in_microseconds(U32 us)
 {
-
-
-
-	ws2812b_light_on();
-	//delay_micros((U32)(LEDS_COUNT * 200));
-	//HAL_Delay(400);
-	//HAL_Delay(10);
-	HAL_Delay(Delay);
-	ws2812b_light_off();
-	//
-
+    U32 us_count_tic =  us * (SystemCoreClock / 1000000);
+    DWT -> CYCCNT = 0U;
+    while(DWT -> CYCCNT < us_count_tic);
 }
 
-void ws2812b_init(TIM_HandleTypeDef *htim, TIM_TypeDef * TIM ,void (*timer_callback)(TIM_HandleTypeDef * htim))
+void ws2812b_show(U16 Delay)
+{
+    HAL_Delay(Delay);
+	ws2812b_light_on();
+}
+
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) // DMA END TRANSFER CALLBACK
+{
+	if(htim -> Instance == WS2812b.TIM)
+	{
+		 ws2812b_light_off();
+	}
+}
+
+void ws2812b_init(TIM_HandleTypeDef *htim, TIM_TypeDef * TIM)
 {
 	WS2812b.htim1 = htim;
 	WS2812b.TIM = TIM;
 	init();
 	DWT_Init();
-	HAL_TIM_Base_Start_IT(htim);// Starting and allowing interrupts on Timer
-	WS2812b.timer_update_interrupt_handler = timer_callback; // transfering ptr to local func
 }
 
+WS2812 new_Strip(WS2812 * _Strip) // Constructor
+{
+		_Strip -> init = ws2812b_init;
+		_Strip -> moving_effect_three_colors = ws2812b_moving_effect_three_colors;
+		_Strip -> moving_effect_two_colors = ws2812b_moving_effect_two_colors;
+		_Strip -> set_pixel = ws2812b_setpixel;
+		_Strip -> setstrip = ws2812b_setstrip;
+		_Strip -> show = ws2812b_show;
+		_Strip -> sliding_effect = ws2812b_sliding_effect;
+		_Strip -> moving_and_vanishing_effect = ws2812b_moving_and_vanishing_effect;
+		_Strip -> delay_in_us = ws2812b_delay_in_microseconds;
+
+
+	return *(_Strip);
+}
+
+/*
+ * Operational functions
+ */
+
+
+/*
+ *  WS2812 Effects
+ */
 
 
 void ws2812b_setpixel(U8 Red, U8 Green,  U8 Blue, U8 Pixelnum) // GRB Row
@@ -122,7 +153,7 @@ void ws2812b_moving_effect_three_colors(Color *_Col_1, Color * _Col_2, Color * _
 {
 
 
-	//U8 Red, U8 Green, U8 Blue, U16 Delay
+
 	U16 counter, temp_cur, Pixels;
 	U16 Blue_pos_start, Green_pos_start, Red_pos_start;
 	U16 Blue_pos_end, Green_pos_end, Red_pos_end;
@@ -267,47 +298,12 @@ void ws2812b_moving_effect_three_colors(Color *_Col_1, Color * _Col_2, Color * _
 
 	}
 }
-void ws2812b_moving_and_vanishing_effect(U8 Color_1_brightness, U8 Color_2_brightness, U8 Color_1, U8 Color_2, U16 Delay)
+void ws2812b_moving_and_vanishing_effect(Color *_Col_1, Color * _Col_2, U16 Delay)
 {
 	for (U16 i = 0; i < PIXELS_COUNT; ++i)
 	{
-		if (i % 2 == 0)
-		{
-			switch (Color_1)
-			{
+		if (i % 2 == 0) ws2812b_setpixel(_Col_1 -> Red, _Col_1 -> Green, _Col_1 -> Blue, i); else ws2812b_setpixel(_Col_2 -> Red, _Col_2 -> Green, _Col_2 -> Blue, i);
 
-			case GREEN:
-				ws2812b_setpixel(Color_1_brightness, 0, 0, i);
-				break;
-
-			case RED:
-				ws2812b_setpixel(0, Color_1_brightness, 0, i);
-				break;
-
-			case BLUE:
-				ws2812b_setpixel(0, 0, Color_1_brightness, i);
-				break;
-			}
-
-		} else
-		{
-
-			switch (Color_2)
-			{
-
-			case GREEN:
-				ws2812b_setpixel(Color_2_brightness, 0, 0, i);
-				break;
-
-			case RED:
-				ws2812b_setpixel(0, Color_2_brightness, 0, i);
-				break;
-
-			case BLUE:
-				ws2812b_setpixel(0, 0, Color_2_brightness, i);
-				break;
-			}
-		}
 		ws2812b_show(Delay);
 
 	}
@@ -317,24 +313,24 @@ void ws2812b_moving_and_vanishing_effect(U8 Color_1_brightness, U8 Color_2_brigh
 		ws2812b_show(Delay);
 	}
 }
-void ws2812b_sliding_effect(U8 Red, U8 Green, U8 Blue, U16 Delay)
+void ws2812b_sliding_effect(Color *_Col_1, Color * _Col_2, Color * _Col_3, U16 Delay)
 {
 
-	for (U8 i = 0; i < 3; i++)
+	for (U8 i = 0; i < 3; ++i)
 	{
 
-		for (U8 k = 0; k < PIXELS_COUNT; k++)
+		for (U8 k = 0; k < PIXELS_COUNT; ++k)
 		{
 
 			if (i == 0)
 			{
-				ws2812b_setpixel(0, 0, Blue, k);
+				ws2812b_setpixel(_Col_1 -> Red, _Col_1 -> Green, _Col_1 -> Blue, k);
 			} else if (i == 1)
 			{
-				ws2812b_setpixel(0, Red, 0, k);
+				ws2812b_setpixel(_Col_2 -> Red, _Col_2 -> Green, _Col_2 -> Blue, k);
 			} else if (i == 2)
 			{
-				ws2812b_setpixel(Green, 0, 0, k);
+				ws2812b_setpixel(_Col_3 -> Red, _Col_3 -> Green, _Col_3 -> Blue, k);
 			}
 
 			ws2812b_show(Delay);
@@ -366,29 +362,13 @@ void ws2812b_moving_effect_two_colors(Color *_Col_1, Color * _Col_2,  U16 Delay)
 	}
 }
 
-
-WS2812 new_Strip(WS2812 * _Strip) // Constructor
-{
-		_Strip -> init = ws2812b_init;
-		_Strip -> moving_effect_three_colors = ws2812b_moving_effect_three_colors;
-		_Strip -> moving_effect_two_colors = ws2812b_moving_effect_two_colors;
-		_Strip -> set_pixel = ws2812b_setpixel;
-		_Strip -> setstrip = ws2812b_setstrip;
-		_Strip -> show = ws2812b_show;
+/*
+ *  WS2812 Effects
+ */
 
 
 
-	return *(_Strip);
-}
-
-
-void handler(TIM_HandleTypeDef * htim)
-{
-	if(htim -> Instance == WS2812b.TIM)
-	{
-		static U16 counter;
 
 
 
-	}
-}
+

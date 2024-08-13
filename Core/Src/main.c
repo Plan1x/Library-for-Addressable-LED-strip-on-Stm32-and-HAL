@@ -49,6 +49,8 @@
 
 WS2812 Stripe;
 Color test_1, test_2, test_3;
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,17 +72,19 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	test_1.Red = 127;
-	test_1.Green = 0;
+	test_1.Red = 253;
+	test_1.Green = 166;
 	test_1.Blue = 0;
 
-	test_2.Green = 0;
-	test_2.Blue = 127;
-	test_2.Red = 0;
 
-	test_3.Green = 127;
+	test_2.Red = 250;
+	test_2.Green = 0;
+	test_2.Blue = 250;
+
+	test_3.Red = 255;
+	test_3.Green = 0;
 	test_3.Blue = 0;
-	test_3.Red = 0;
+
 
 	Stripe = new_Strip(&Stripe);
 
@@ -110,9 +114,9 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  //ws2812b_new_strip(&htim1);
-  //DWT_Init();
-  Stripe.init(&htim1, TIM1, HAL_TIM_PeriodElapsedCallback);
+
+  Stripe.init(&htim1, TIM1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -121,13 +125,9 @@ int main(void)
 	{
 
 
-		//Stripe.moving_effect_two_colors(&test_1, &test_2, 100);
-		Stripe.moving_effect_three_colors(&test_1, &test_2, &test_3, 20);
-		//ws2812b_moving_effect_three_colors(&Red,&Green,&Blue,30);
 
+		Stripe.moving_effect_three_colors(&test_1, &test_2, &test_3, 30);
 
-
-		//ws2812b_moving_and_vanishing_effect(127, 127, RED, GREEN, 20);
 
 
 

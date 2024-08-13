@@ -8,29 +8,98 @@
 #ifndef INC_WS2812B_H_
 #define INC_WS2812B_H_
 
-#include "main.h"
-//#include "Colors.h"
+/* Includes ------------------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 
+#include "main.h"
+#include "stdbool.h"
+
+#define STM32F1
+
+#ifdef STM32F1
+    #include "stm32f1xx_hal_conf.h"
+
+#elif defined(STM32F2)
+    #include "stm32f2xx_hal_conf.h"
+
+#elif defined(STM32F3)
+    #include "stm32f3xx_hal_conf.h"
+
+#elif defined(STM32F4)
+    #include "stm32f4xx_hal_conf.h"
+
+#elif defined(STM32F7)
+    #include "stm32f7xx_hal_conf.h"
+
+#elif defined(STM32H7)
+    #include "stm32h7xx_hal_conf.h"
+
+#elif defined(STM32L0)
+    #include "stm32l0xx_hal_conf.h"
+
+#elif defined(STM32L1)
+    #include "stm32l1xx_hal_conf.h"
+
+#elif defined(STM32L4)
+    #include "stm32l4xx_hal_conf.h"
+
+#elif defined(STM32L5)
+    #include "stm32l5xx_hal_conf.h"
+
+#elif defined(STM32G0)
+    #include "stm32g0xx_hal_conf.h"
+
+#elif defined(STM32G4)
+    #include "stm32g4xx_hal_conf.h"
+
+#elif defined(STM32WB)
+    #include "stm32wbxx_hal_conf.h"
+
+#elif defined(STM32WL)
+    #include "stm32wlxx_hal_conf.h"
+
+#elif defined(STM32MP1)
+    #include "stm32mp1xx_hal_conf.h"
+
+#endif
+
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
 typedef uint8_t U8;
 typedef uint16_t U16;
 typedef uint32_t U32;
+/* USER CODE END PTD */
 
-//#define WS2812b_120
+
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
 
 #define DWT_CONTROL *(volatile unsigned long *)0xE0001000
 #define SCB_DEMCR   *(volatile unsigned long *)0xE000EDFC
 
 
 
-// Changeable parameter(number of pixels in your led strip)
-#define PIXELS_COUNT 120
+
+
+
+#define PIXELS_COUNT 120 // Changeable parameter(number of pixels in your led strip)
 
 #define BITS_IN_PIXEL 24
 #define BYTE 8
 
-#define TIME_TO_RST 50 // Must be greater than 50 us
+#define TIME_TO_RST 50 // Should be greater than 50 us
 
 #define LEDS_COUNT (PIXELS_COUNT * BITS_IN_PIXEL) + TIME_TO_RST
+
+/* USER CODE END PD */
+
+/* Private variables ---------------------------------------------------------*/
+
+/* USER CODE BEGIN PV */
 
 
 
@@ -41,8 +110,7 @@ typedef enum
 {
 	PERIOD = 90 - 1,
 	LOGIC_ZERO = 26 - 1, // in ns
-	LOGIC_ONE = 65 - 1 , // in ns
-	WAIT_STATE = 50   // in ms
+	LOGIC_ONE = 65 - 1 // in ns
 
 } Led_states;
 
@@ -74,25 +142,34 @@ typedef struct
 	U16 buffer[LEDS_COUNT];
 	TIM_HandleTypeDef * htim1;
 	TIM_TypeDef * TIM;
-	void (*timer_update_interrupt_handler)(TIM_HandleTypeDef * htim);
-
 
 }Strip;
 
 typedef struct
 {
-	void (*init)(TIM_HandleTypeDef *, TIM_TypeDef * ,void (*timer_callback)(TIM_HandleTypeDef *));
+	void (*init)(TIM_HandleTypeDef *, TIM_TypeDef *);
 	void (*set_pixel)(U8,U8,U8,U8);
 	void (*setstrip)(Color *_Col);
 	void (*show)(U16 Delay);
 	void (*moving_effect_two_colors)(Color *_Col_1, Color * _Col_2,  U16 Delay);
 	void (*moving_effect_three_colors)(Color *_Col_1, Color * _Col_2, Color * _Col_3, U16 Delay);
+	void (*sliding_effect)(Color *_Col_1, Color * _Col_2, Color * _Col_3, U16 Delay);
+	void (*moving_and_vanishing_effect)(Color *_Col_1, Color * _Col_2, U16 Delay);
+	void(*delay_in_us)(U32 us);
 
 }WS2812;
 
 /*
  * STRUCTS
  */
+
+/* USER CODE END PV */
+
+
+/* Private function prototypes -----------------------------------------------*/
+
+/* USER CODE BEGIN PFP */
+
 
 /*
  * Description : Initializes the led strip by filling it with Black color
@@ -139,7 +216,7 @@ void ws2812b_setpixel(U8 Red, U8 Green, U8 Blue, U8 Pixelnum);
  *
  */
 
-void ws2812b_init(TIM_HandleTypeDef *  htim, TIM_TypeDef * , void (*timer_callback)(TIM_HandleTypeDef *));
+void ws2812b_init(TIM_HandleTypeDef *  htim, TIM_TypeDef *);
 
  /*
   * Description : Lights up the whole strip with specified color
@@ -229,7 +306,7 @@ void ws2812b_moving_effect_three_colors(Color *_Col_1, Color * _Col_2, Color * _
  *
  */
 
-void ws2812b_sliding_effect(U8 Red, U8 Green, U8 Blue, U16 Delay);
+void ws2812b_sliding_effect(Color *_Col_1, Color * _Col_2, Color * _Col_3, U16 Delay);
 
 
 
@@ -249,22 +326,33 @@ void ws2812b_sliding_effect(U8 Red, U8 Green, U8 Blue, U16 Delay);
  *
  */
 
-void ws2812b_moving_and_vanishing_effect(U8 Color_1_brightness, U8 Color_2_brightness, U8 Color_1, U8 Color_2, U16 Delay);
+void ws2812b_moving_and_vanishing_effect(Color *_Col_1, Color * _Col_2, U16 Delay);
 
 
 /*
  * Description : Constructor
  *
- * Prototype : Color init(Color * _Col);
+ * Prototype : WS2812 new_Strip(WS2812 * _Strip);
  *
  * Parameters :
  *
- * Color * _Col - Pointer to an object of type Color
+ * WS2812 * _Strip - Pointer to an object of type WS2812
  */
 WS2812 new_Strip(WS2812 * _Strip);
 
 
-void handler(TIM_HandleTypeDef * htim);
+/*
+ * Description : Delay in microseconds
+ *
+ * Prototype : void ws2812b_delay_in_microseconds(U32 us);
+ *
+ * Parameters :
+ *
+ * U32 us - Delay time(in microseconds)
+ */
+void ws2812b_delay_in_microseconds(U32 us);
+
+/* USER CODE END PFP */
 
 
 #endif /* INC_WS2812B_H_ */
