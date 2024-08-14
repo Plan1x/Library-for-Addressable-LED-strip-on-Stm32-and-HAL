@@ -49,6 +49,10 @@
 
 WS2812 Stripe;
 Color test_1, test_2, test_3;
+extern Color temp;
+HSV test;
+U16 speed = 0;
+U8 counter;
 
 
 /* USER CODE END PV */
@@ -56,7 +60,7 @@ Color test_1, test_2, test_3;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void rainbow_effect(HSV * hsv, uint16_t speed);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -86,6 +90,9 @@ int main(void)
 	test_3.Blue = 0;
 
 
+	test.Saturation = 100;
+	test.Value = 100;
+	test.Hue = 0;
 	Stripe = new_Strip(&Stripe);
 
 	//ws2812b_init();
@@ -114,8 +121,8 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
+Stripe.init(&htim1, TIM1);
 
-  Stripe.init(&htim1, TIM1);
 
   /* USER CODE END 2 */
 
@@ -124,10 +131,16 @@ int main(void)
 	while (1)
 	{
 
+		for(U16 i = 0; i < PIXELS_COUNT; i++)
+		{
+			test.Hue =  counter + i * 2 ;
+			Stripe.set_pixel_hsv(&test, i);
 
+		}
 
-		Stripe.moving_effect_three_colors(&test_1, &test_2, &test_3, 30);
-
+		counter++;
+		Stripe.show(10);
+		HAL_Delay(10);
 
 
 
@@ -178,7 +191,25 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void rainbow_effect(HSV * hsv, uint16_t speed)
+{
+	 uint16_t hue_segment;
+	    for (uint16_t i = 0; i < PIXELS_COUNT; i += STRIP_SIZE)
+	    {
+	        // Вычисление оттенка для текущей полосы
+	        hue_segment = ((i / STRIP_SIZE) * 360 / (PIXELS_COUNT / STRIP_SIZE) + speed) % 360;
 
+	        // Применение одного и того же цвета к каждому пикселю в полосе
+	        for (uint16_t j = 0; j < STRIP_SIZE; j++) {
+	            if (i + j < PIXELS_COUNT) {  // Проверка, чтобы не выйти за границы массива
+	                hsv->Hue = hue_segment;
+
+	                Stripe.set_pixel_hsv(hsv, i + j);
+	            }
+	        }
+	    }
+
+}
 //void DWT_Init(void)
 //{
 //    SCB_DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;

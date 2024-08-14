@@ -13,6 +13,7 @@
 
 #include "main.h"
 #include "stdbool.h"
+#include "math.h"
 
 #define STM32F1
 
@@ -82,7 +83,7 @@ typedef uint32_t U32;
 #define SCB_DEMCR   *(volatile unsigned long *)0xE000EDFC
 
 
-
+#define STRIP_SIZE 10
 #define PIXELS_COUNT 120 // Changeable parameter(number of pixels in your led strip)
 
 #define BITS_IN_PIXEL 24
@@ -140,12 +141,21 @@ typedef struct
 	TIM_HandleTypeDef * htim1;
 	TIM_TypeDef * TIM;
 
-}Strip;
+}WS2812_hw;
+
+typedef struct
+{
+	U16 Hue; // Hue >= 0 deg є Hue <= 360 deg
+	U8 Saturation; // Saturation >= 0% є Saturation <= 100%
+	U8 Value; // Value >= 0% є Value <= 100% (Brightness)
+
+}HSV;
 
 typedef struct
 {
 	void (*init)(TIM_HandleTypeDef *  htim, TIM_TypeDef * TIM);
-	void (*set_pixel)(U8 Red, U8 Green, U8 Blue, U16 Pixelnum);
+	void (*set_pixel)(Color * Col, U16 Pixelnum);
+	void (*set_pixel_hsv)(HSV * Col, U16 Pixelnum);
 	void (*setstrip)(Color *_Col);
 	void (*show)(U16 Delay);
 	void (*moving_effect_two_colors)(Color *_Col_1, Color * _Col_2,  U16 Delay);
@@ -155,6 +165,8 @@ typedef struct
 	void(*delay_in_us)(U32 us);
 
 }WS2812;
+
+
 
 /*
  * STRUCTS
@@ -200,7 +212,7 @@ void ws2812b_init(TIM_HandleTypeDef *  htim, TIM_TypeDef * TIM);
  * !! Last pixel index is Pixelnum = (PIXELS_COUNT - 1) !!
  */
 
-void ws2812b_setpixel(U8 Red, U8 Green, U8 Blue, U16 Pixelnum);
+void ws2812b_setpixel(Color * Col, U16 Pixelnum);
 
 
 
@@ -336,6 +348,8 @@ WS2812 new_Strip(WS2812 * _Strip);
  */
 void ws2812b_delay_in_microseconds(U32 us);
 
+
+void ws2812b_set_pixel_hsv(HSV * Col, U16 Pixelnum);
 /* USER CODE END PFP */
 
 
