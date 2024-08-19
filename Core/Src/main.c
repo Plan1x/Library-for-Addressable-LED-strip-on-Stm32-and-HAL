@@ -50,7 +50,7 @@
 
 WS2812 Stripe;
 
-RGB a,b,c;
+
 
 /* USER CODE END PV */
 
@@ -73,9 +73,6 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
- a.Blue = 255;
- b.Green = 255;
- c.Red = 255;
 
 
 	Stripe = New_Strip(&Stripe);
@@ -117,8 +114,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		Ws2812_Custom_Palette_RGB(&test, 8, 30);
-		//Stripe.Moving_effect_three_colors(&a,&b,&c, 30);
+		Stripe.Custom_Palette_HSV(&Rainbow, 5, 30);
+
 
 
 
