@@ -25,7 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ws2812b.h"
-
+#include "Colors.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,20 +47,17 @@
 
 /* USER CODE BEGIN PV */
 
-WS2812 Stripe;
-Color test_1, test_2, test_3;
-extern Color temp;
-HSV test;
-U16 speed = 0;
-U8 counter;
 
+WS2812 Stripe;
+
+RGB a,b,c;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void rainbow_effect(HSV * hsv, uint16_t speed);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -76,24 +73,13 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	test_1.Red = 253;
-	test_1.Green = 166;
-	test_1.Blue = 0;
+ a.Blue = 255;
+ b.Green = 255;
+ c.Red = 255;
 
 
-	test_2.Red = 250;
-	test_2.Green = 0;
-	test_2.Blue = 250;
+	Stripe = New_Strip(&Stripe);
 
-	test_3.Red = 255;
-	test_3.Green = 0;
-	test_3.Blue = 0;
-
-
-	test.Saturation = 100;
-	test.Value = 100;
-	test.Hue = 0;
-	Stripe = new_Strip(&Stripe);
 
 	//ws2812b_init();
 
@@ -121,7 +107,8 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-Stripe.init(&htim1, TIM1);
+	Stripe.Init(&htim1, TIM1);
+
 
 
   /* USER CODE END 2 */
@@ -130,17 +117,10 @@ Stripe.init(&htim1, TIM1);
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
+		Ws2812_Custom_Palette_RGB(&test, 8, 30);
+		//Stripe.Moving_effect_three_colors(&a,&b,&c, 30);
 
-		for(U16 i = 0; i < PIXELS_COUNT; i++)
-		{
-			test.Hue =  counter + i * 2 ;
-			Stripe.set_pixel_hsv(&test, i);
 
-		}
-
-		counter++;
-		Stripe.show(10);
-		HAL_Delay(10);
 
 
 
@@ -191,39 +171,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void rainbow_effect(HSV * hsv, uint16_t speed)
-{
-	 uint16_t hue_segment;
-	    for (uint16_t i = 0; i < PIXELS_COUNT; i += STRIP_SIZE)
-	    {
-	        // Вычисление оттенка для текущей полосы
-	        hue_segment = ((i / STRIP_SIZE) * 360 / (PIXELS_COUNT / STRIP_SIZE) + speed) % 360;
-
-	        // Применение одного и того же цвета к каждому пикселю в полосе
-	        for (uint16_t j = 0; j < STRIP_SIZE; j++) {
-	            if (i + j < PIXELS_COUNT) {  // Проверка, чтобы не выйти за границы массива
-	                hsv->Hue = hue_segment;
-
-	                Stripe.set_pixel_hsv(hsv, i + j);
-	            }
-	        }
-	    }
-
-}
-//void DWT_Init(void)
-//{
-//    SCB_DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-//    DWT_CONTROL |= DWT_CTRL_CYCCNTENA_Msk;
-//}
-/*uint8_t Lora_rx(LoRa lora, U8 *_buff)
- {
- uint8_t val;
- LoRa_startReceiving(&lora);
- val = LoRa_receive(&lora, _buff, 1);
- HAL_Delay(50);
- LoRa_gotoMode(&lora, STNBY_MODE);
- return val;
- }*/
 
 /* USER CODE END 4 */
 
