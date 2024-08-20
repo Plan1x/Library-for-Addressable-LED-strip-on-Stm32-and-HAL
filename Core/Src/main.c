@@ -74,7 +74,6 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
 
-
 	Stripe = New_Strip(&Stripe);
 
 
@@ -107,18 +106,14 @@ int main(void)
 	Stripe.Init(&htim1, TIM1);
 
 
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		Stripe.Custom_Palette_HSV(&Rainbow, 5, 30);
 
-
-
-
+		Stripe.Custom_Palette_HSV(&Rainbow, 5, 20);
 
 
     /* USER CODE END WHILE */

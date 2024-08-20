@@ -42,20 +42,6 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
-//typedef uint8_t U8;
-//typedef uint16_t U16;
-//typedef uint32_t U32;
-
-//typedef enum
-//{
-//	PERIOD = 90 - 1,
-//	LOGIC_ZERO = 26 - 1, // in ns
-//	LOGIC_ONE = 65 - 1 , // in ns
-//	WAIT_STATE = 50   // in ms
-//
-//} Led_states;
-
-
 
 
 /* USER CODE END EC */
