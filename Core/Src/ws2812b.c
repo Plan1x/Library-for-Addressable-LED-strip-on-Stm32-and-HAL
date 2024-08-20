@@ -217,155 +217,7 @@ void Ws2812b_SetStrip(RGB *_Col)
 	for (U8 i = 0; i < PIXELS_COUNT; i++) Ws2812b_SetPixel_RGB(_Col, i);
 }
 
-/*void Ws2812b_Moving_Effect_Three_Colors(RGB *_Col_1, RGB * _Col_2, RGB * _Col_3, U16 Delay)
-{
 
-
-
-	U16 counter, temp_cur, Pixels;
-	U16 Blue_pos_start, Green_pos_start, Red_pos_start;
-	U16 Blue_pos_end, Green_pos_end, Red_pos_end;
-
-	counter = 0;
-	Pixels = PIXELS_COUNT;
-
-
-
-	while(Pixels % 3 != 0) Pixels--;
-
-
-
-
-	temp_cur = Pixels / 3;
-
-
-
-	Red_pos_start = 0;
-	Green_pos_start = temp_cur;
-	Blue_pos_start = 2 * temp_cur;
-
-	Red_pos_end = temp_cur;
-	Green_pos_end = 2 * temp_cur;
-	Blue_pos_end = 3 * temp_cur;
-
-	for (U8 j = 0; j < Pixels; ++j) // Each of 120 pixels
-			{
-
-		for (U8 i = 0; i < Pixels; ++i) // Each of 120 pixels
-
-				{
-
-			if (counter == 0) // first iteration(fill strip with default template)
-					{
-
-				if (i >= Red_pos_start && i < Red_pos_end)
-				{
-
-					Ws2812b_SetPixel_RGB(_Col_1, i); // R
-
-				} else if (i >= Green_pos_start && i < Green_pos_end)
-				{
-					Ws2812b_SetPixel_RGB(_Col_2, i); // G
-				} else if (i >= Blue_pos_start && i < Blue_pos_end)
-				{
-
-					Ws2812b_SetPixel_RGB(_Col_3, i); // B
-				}
-
-			} else
-			{
-
-				if (Blue_pos_end >= 0 && Blue_pos_end < temp_cur && Blue_pos_start > (2 * temp_cur) && Blue_pos_start <= (3 * temp_cur)) // Blue end begin transfer
-						{
-					if (i >= 0 && i < Red_pos_start) //B
-							{
-						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
-					} else if (i >= Red_pos_start && i < Red_pos_end) //R
-							{
-						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
-					} else if (i >= Green_pos_start && i < Green_pos_end) //G
-							{
-						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
-					} else if (i >= Blue_pos_start && i < Pixels) //B
-					{
-						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
-					}
-
-				} else if (Blue_pos_start >= 0 && Blue_pos_end > 0 && Blue_pos_end <= temp_cur && Green_pos_end <= (3 * temp_cur)) // Blue start begin transfer
-							{
-
-					if (i >= 0 && i < Blue_pos_end) //B
-						    {
-
-						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
-
-					} else if (i >= Red_pos_start && i < Red_pos_end) // R
-							{
-						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
-
-					} else if (i >= Green_pos_start && i < Pixels) // G
-					{
-						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
-					}
-
-				} else if (Green_pos_end >= 0 && Green_pos_end < temp_cur && Green_pos_start > (2 * temp_cur) && Green_pos_start <= (3 * temp_cur) && Red_pos_end < (3 * temp_cur)) // green end transfer begin
-								{
-					if (i >= 0 && i < Blue_pos_start) // G
-							{
-						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
-					} else if (i >= Blue_pos_start && i < Blue_pos_end) // B
-							{
-						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
-					} else if (i >= Red_pos_start && i < Red_pos_end) // R
-							{
-						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
-					}
-
-				} else if (Green_pos_start >= 0 && Green_pos_end <= temp_cur && Red_pos_end <= (3 * temp_cur)) // Transfering Green start to begin
-							{
-					if (i >= 0 && i < Green_pos_end) // G
-							{
-						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
-					} else if (i >= Blue_pos_start && i < Blue_pos_end) // B
-							{
-						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
-					} else if (i >= Red_pos_start && i < Red_pos_end) // R
-							{
-						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
-					}
-
-				} else if (Red_pos_end >= 0 && Red_pos_end <= temp_cur && Red_pos_start <= (3 * temp_cur)) // Transfering Red end and Red start to begin
-							{
-					if (i >= 0 && i < Red_pos_end) // R
-							{
-						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
-					} else if (i >= Green_pos_start && i < Green_pos_end) // G
-							{
-						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
-					} else if (i >= Blue_pos_start && i < Blue_pos_end) //B
-							{
-						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
-					}
-				}
-
-			}
-
-		}
-
-		/////////////// If any of the cursors exceeded the number of pixels, then return to the beginning
-		Red_pos_end = ((Red_pos_end + 1) > Pixels) ? 0 : (Red_pos_end + 1);
-		Red_pos_start = ((Red_pos_start + 1) > Pixels) ? 0 : (Red_pos_start + 1);
-		Green_pos_start = ((Green_pos_start + 1) > Pixels) ? 0 : (Green_pos_start + 1);
-		Green_pos_end = ((Green_pos_end + 1) > Pixels) ? 0 : (Green_pos_end + 1);
-		Blue_pos_start = ((Blue_pos_start + 1) > Pixels) ? 0 : (Blue_pos_start + 1);
-		Blue_pos_end = ((Blue_pos_end + 1) > Pixels) ? 0 : (Blue_pos_end + 1);
-		///////////////If any of the cursors exceeded the number of pixels, then return to the beginning
-
-		Ws2812b_Show(Delay);
-		counter = 1;
-
-	}
-} */
 void Ws2812b_Moving_And_Vanishing_Effect(RGB *_Col_1, RGB * _Col_2, U16 Delay)
 {
 	RGB empty;
@@ -577,6 +429,158 @@ void Ws2812_Custom_Palette_RGB(Palette_RGB * _palette, U8 palettes_num, U16 Dela
 		}
 
 }
+
+/*void Ws2812b_Moving_Effect_Three_Colors(RGB *_Col_1, RGB * _Col_2, RGB * _Col_3, U16 Delay)
+{
+
+
+
+	U16 counter, temp_cur, Pixels;
+	U16 Blue_pos_start, Green_pos_start, Red_pos_start;
+	U16 Blue_pos_end, Green_pos_end, Red_pos_end;
+
+	counter = 0;
+	Pixels = PIXELS_COUNT;
+
+
+
+	while(Pixels % 3 != 0) Pixels--;
+
+
+
+
+	temp_cur = Pixels / 3;
+
+
+
+	Red_pos_start = 0;
+	Green_pos_start = temp_cur;
+	Blue_pos_start = 2 * temp_cur;
+
+	Red_pos_end = temp_cur;
+	Green_pos_end = 2 * temp_cur;
+	Blue_pos_end = 3 * temp_cur;
+
+	for (U8 j = 0; j < Pixels; ++j) // Each of 120 pixels
+			{
+
+		for (U8 i = 0; i < Pixels; ++i) // Each of 120 pixels
+
+				{
+
+			if (counter == 0) // first iteration(fill strip with default template)
+					{
+
+				if (i >= Red_pos_start && i < Red_pos_end)
+				{
+
+					Ws2812b_SetPixel_RGB(_Col_1, i); // R
+
+				} else if (i >= Green_pos_start && i < Green_pos_end)
+				{
+					Ws2812b_SetPixel_RGB(_Col_2, i); // G
+				} else if (i >= Blue_pos_start && i < Blue_pos_end)
+				{
+
+					Ws2812b_SetPixel_RGB(_Col_3, i); // B
+				}
+
+			} else
+			{
+
+				if (Blue_pos_end >= 0 && Blue_pos_end < temp_cur && Blue_pos_start > (2 * temp_cur) && Blue_pos_start <= (3 * temp_cur)) // Blue end begin transfer
+						{
+					if (i >= 0 && i < Red_pos_start) //B
+							{
+						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
+					} else if (i >= Red_pos_start && i < Red_pos_end) //R
+							{
+						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
+					} else if (i >= Green_pos_start && i < Green_pos_end) //G
+							{
+						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
+					} else if (i >= Blue_pos_start && i < Pixels) //B
+					{
+						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
+					}
+
+				} else if (Blue_pos_start >= 0 && Blue_pos_end > 0 && Blue_pos_end <= temp_cur && Green_pos_end <= (3 * temp_cur)) // Blue start begin transfer
+							{
+
+					if (i >= 0 && i < Blue_pos_end) //B
+						    {
+
+						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
+
+					} else if (i >= Red_pos_start && i < Red_pos_end) // R
+							{
+						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
+
+					} else if (i >= Green_pos_start && i < Pixels) // G
+					{
+						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
+					}
+
+				} else if (Green_pos_end >= 0 && Green_pos_end < temp_cur && Green_pos_start > (2 * temp_cur) && Green_pos_start <= (3 * temp_cur) && Red_pos_end < (3 * temp_cur)) // green end transfer begin
+								{
+					if (i >= 0 && i < Blue_pos_start) // G
+							{
+						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
+					} else if (i >= Blue_pos_start && i < Blue_pos_end) // B
+							{
+						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
+					} else if (i >= Red_pos_start && i < Red_pos_end) // R
+							{
+						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
+					}
+
+				} else if (Green_pos_start >= 0 && Green_pos_end <= temp_cur && Red_pos_end <= (3 * temp_cur)) // Transfering Green start to begin
+							{
+					if (i >= 0 && i < Green_pos_end) // G
+							{
+						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
+					} else if (i >= Blue_pos_start && i < Blue_pos_end) // B
+							{
+						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
+					} else if (i >= Red_pos_start && i < Red_pos_end) // R
+							{
+						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
+					}
+
+				} else if (Red_pos_end >= 0 && Red_pos_end <= temp_cur && Red_pos_start <= (3 * temp_cur)) // Transfering Red end and Red start to begin
+							{
+					if (i >= 0 && i < Red_pos_end) // R
+							{
+						Ws2812b_SetPixel_RGB(_Col_1, i);//ws2812b_setpixel(0, Red, 0, i);
+					} else if (i >= Green_pos_start && i < Green_pos_end) // G
+							{
+						Ws2812b_SetPixel_RGB(_Col_2, i);//ws2812b_setpixel(Green, 0, 0, i);
+					} else if (i >= Blue_pos_start && i < Blue_pos_end) //B
+							{
+						Ws2812b_SetPixel_RGB(_Col_3, i);//ws2812b_setpixel(0, 0, Blue, i);
+					}
+				}
+
+			}
+
+		}
+
+		/////////////// If any of the cursors exceeded the number of pixels, then return to the beginning
+		Red_pos_end = ((Red_pos_end + 1) > Pixels) ? 0 : (Red_pos_end + 1);
+		Red_pos_start = ((Red_pos_start + 1) > Pixels) ? 0 : (Red_pos_start + 1);
+		Green_pos_start = ((Green_pos_start + 1) > Pixels) ? 0 : (Green_pos_start + 1);
+		Green_pos_end = ((Green_pos_end + 1) > Pixels) ? 0 : (Green_pos_end + 1);
+		Blue_pos_start = ((Blue_pos_start + 1) > Pixels) ? 0 : (Blue_pos_start + 1);
+		Blue_pos_end = ((Blue_pos_end + 1) > Pixels) ? 0 : (Blue_pos_end + 1);
+		///////////////If any of the cursors exceeded the number of pixels, then return to the beginning
+
+		Ws2812b_Show(Delay);
+		counter = 1;
+
+	}
+} */
+
+
 /*
  *  WS2812 Effects
  */
