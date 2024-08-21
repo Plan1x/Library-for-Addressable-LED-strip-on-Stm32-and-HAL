@@ -9,7 +9,12 @@
 #define INC_COLORS_H_
 #include "ws2812b.h"
 
-
+const RGB t [] =
+{
+		{255, 221, 0},
+		{33, 0, 255},
+		{4, 255, 26},
+};
 
 const HSV R [] =
 {
@@ -29,7 +34,9 @@ const HSV Ukr_flag [] =
 		{HUE_DEEP_YELLOW, 100, 100},
 };// Ukrainian Flag Palette
 
-Palette Rainbow = {R, sizeof(R) / sizeof(HSV)};
-Palette Ukrainian_flag = {Ukr_flag, sizeof(Ukr_flag) / sizeof(HSV)};
+Palette_HSV Rainbow = {R, sizeof(R) / sizeof(HSV)};
+Palette_HSV Ukrainian_flag = {Ukr_flag, sizeof(Ukr_flag) / sizeof(HSV)};
+
+Palette_RGB test = {t, sizeof(t) / sizeof(RGB)};
 
 #endif /* INC_COLORS_H_ */
