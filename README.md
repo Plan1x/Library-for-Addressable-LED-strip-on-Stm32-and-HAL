@@ -84,8 +84,8 @@ If everything is configured correctly, then by connecting an oscilloscope to the
 ![oscillogram](https://github.com/user-attachments/assets/e881e5d2-36a5-4134-a390-23d405e24c92)
 
 ## 💻Software 
-1. Install the [Library]() 
-2. Include [ws2812b.h]() and [Colors.h]() in main.c file
+1. Install the [Library](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver/tree/main/Ws2812_HAL_Driver) 
+2. Include [ws2812b.h](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver/blob/main/Ws2812_HAL_Driver/Inc/ws2812b.h) and [Colors.h](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver/blob/main/Ws2812_HAL_Driver/Inc/Colors.h) in main.c file
 
 ```C
  /* Private includes ----------------------------------------------------------*/
@@ -128,7 +128,7 @@ WS2812 Strip;
 
   /* USER CODE END 2 */
 ```
-6. The last step is to go to the [ws2812b.h]() file and change the parameter to the number of pixels on your LED strip
+6. The last step is to go to the [ws2812b.h](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver/blob/main/Ws2812_HAL_Driver/Inc/ws2812b.h) file and change the parameter to the number of pixels on your LED strip
 ```C
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
@@ -439,7 +439,7 @@ Inside the while(1)
 **void Custom_Palette_RGB(Palette_RGB * _palette, U8 palettes_num, U16 Delay);**
 
 This function allows you to display your own color palette on the LED strip in RGB format. 
-In the header file [Colors.h]() you can find several test palettes. I'll Palette_RGB test
+In the header file [Colors.h](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver/blob/main/Ws2812_HAL_Driver/Inc/Colors.h) you can find several test palettes. I'll Palette_RGB test
 
 I'll be using the Palette_RGB test palette, but you can create any palette you want! In order for the palette to be evenly displayed on the LED strip, you need to make sure that the number of colors in your palette is a multiple of the number of pixels on it
 
@@ -482,7 +482,7 @@ Same function as Custom_Palette_RGB, but now we have the ability to create a pal
 ![9-ezgif com-cut](https://github.com/user-attachments/assets/3b3daeee-7830-4328-92fb-f62e839811ed)
 
 
-**If you want to get acquainted with the syntax of each function in more detail, go to the header file [ws2812b.h](). I left a description for each function there next to it's prototype**
+**If you want to get acquainted with the syntax of each function in more detail, go to the header file [ws2812b.h](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver/blob/main/Ws2812_HAL_Driver/Inc/ws2812b.h). I left a description for each function there next to it's prototype**
 
 # ✍Bugs and Shortcomings
 **If you find any bugs or shortcomings in my library, or if you know how to improve the functionality, I will be very grateful if you let me know about it**
