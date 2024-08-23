@@ -5,7 +5,7 @@
 
 * [License](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#license)
 
-* [Requirements]()
+* [Requirements](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#requirements)
 
 * [Guide Video](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#guide-video)
 
