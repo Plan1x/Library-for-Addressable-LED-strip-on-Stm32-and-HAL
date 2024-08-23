@@ -1,21 +1,21 @@
 
 # 📝Content
 
-* [Introduction](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver#-introduction)
+* [Introduction](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#-introduction)
 
-* [License](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver#license)
+* [License](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#license)
 
-* [Guide Video](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver#guide-video)
+* [Guide Video](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#guide-video)
 
-* [Circuit](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver#circuit)
+* [Circuit](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#circuit)
 
-* [Usage](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver#usage)
+* [Usage](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#usage)
 
-* [Functions](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver#%EF%B8%8Ffunctions)
+* [Functions](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#%EF%B8%8Ffunctions)
 
-* [Bugs and Shortcomings](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver#bugs-and-shortcomings)
+* [Bugs and Shortcomings](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#bugs-and-shortcomings)
 
-* [How to reach me](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver#-how-to-reach-me)
+* [How to reach me](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#-how-to-reach-me)
 
 # 📜 Introduction
 
