@@ -5,6 +5,8 @@
 
 * [License](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#license)
 
+* [Requirements]()
+
 * [Guide Video](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#guide-video)
 
 * [Circuit](https://github.com/Plan1x/Ws2812b-Stm32-HAL-LED-Driver?tab=readme-ov-file#circuit)
@@ -30,13 +32,26 @@ A library for simple and fast control of addressable LED strips based on Stm32 c
   
 </p>
 
+# 📋Requirements
+
+* Addressable LED strip.
+  **Supported Chips: WS2812, WS2812b, WS2811, WS2813, SK6812, WS2815, and GS8208 (I use WS2812)**
+
+* Stm32 microcontroller.
+**Bluepill is recommended(Stm32f103c8t6)**
+
+* Power supply.  **I use a 50 Watt power supply (5 V, 10 A)**
+
+* Resistor 300 - 500 Ohm
+
+* Logic Level Converter (3.3 to 5 V)
 
 # 📷Guide Video
 
 **Soon**
 
-# ⚡Circuit 
-![Circuit](https://github.com/user-attachments/assets/4c48be20-e6d1-492c-8abe-d4ad67b7ae74)
+# ⚡Circuit
+![Circuit](https://github.com/user-attachments/assets/5e5a63ae-fa09-4585-8518-46d9f253ffa7)
 
 
 # 👨‍💻Usage
